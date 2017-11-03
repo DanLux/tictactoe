@@ -1,31 +1,27 @@
 
-require_relative 'player_strategy'
+require_relative 'easy_bot_strategy'
 
-class MediumBotStrategy < PlayerStrategy
+class MediumBotStrategy < EasyBotStrategy
   def choose_spot(board)
-    available_spots = board.available_spots
-    best_move = nil
+    return obvious_choice(board) || random_choice(board)
+  end
 
-    available_spots.each do |spot|
+  private
+
+  def obvious_choice(board)
+    board.available_spots.each do |spot|
       board.mark_spot spot, @player_marker
-      end_game = board.game_over?
+      victory = board.game_over
       board.unmark_spot spot
 
-      if end_game
+      board.mark_spot spot, @opponent_marker
+      defeat = board.game_over
+      board.unmark_spot spot
+
+      if victory || defeat
         return spot
-      else
-        board.mark_spot spot, @opponent_marker
-        if board.game_over?
-          best_move = spot
-        end
       end
-      board.unmark_spot spot
     end
-
-    if best_move
-      return best_move
-    else
-      return available_spots[rand(0...available_spots.count)]
-    end
+    return nil
   end
 end

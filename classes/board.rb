@@ -1,11 +1,11 @@
 
 class Board
-  attr_reader :all_spots
+  attr_reader :size, :all_spots, :winning_rows, :total_moves
 
   def initialize(size=3)
     @size = size
     @all_spots = (0...@size ** 2).to_a
-    @winning_spots = horizontal_spots + vertical_spots + diagonal_spots
+    @winning_rows = horizontal_spots + vertical_spots + diagonal_spots
 
     @board = @all_spots.map { |spot| spot.to_s }
     @initial_board = @board.clone
@@ -43,15 +43,14 @@ class Board
     @all_spots.select { |spot| is_available? spot  }
   end
 
-  def marked_spots_in_a_row
-    @winning_spots.find do |spots_row|
-      row_marks = spots_row.map { |spot| get_mark spot }
-      row_marks.uniq.length == 1
-    end
+  def game_over
+    winner || tie?
   end
 
-  def game_over?
-    (not marked_spots_in_a_row.nil?) || tie?
+  def winner
+    if (winning_row = marked_spots_in_a_row)
+      get_mark(winning_row.first)
+    end
   end
 
   def tie?
@@ -103,6 +102,13 @@ class Board
       printf(" %2s ", formatted_mark)
     end
     puts "\n\n"
+  end
+
+  def marked_spots_in_a_row
+    @winning_rows.find do |spots_row|
+      row_marks = spots_row.map { |spot| get_mark spot }
+      row_marks.uniq.length == 1
+    end
   end
 
   def horizontal_spots

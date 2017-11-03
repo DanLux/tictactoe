@@ -3,8 +3,12 @@ require_relative 'player_strategy'
 
 class EasyBotStrategy < PlayerStrategy
   def choose_spot(board)
-    available_spots = board.available_spots
-    random_index = rand(0...available_spots.count)
-    return available_spots[random_index]
+    random_choice(board)
+  end
+
+  private
+
+  def random_choice(board)
+    board.available_spots.sample
   end
 end

@@ -9,8 +9,32 @@ class Game
     @markers = ['X', 'O']
   end
 
+  def play
+    puts "*** Welcome to Tic-Tac-Toe game ***"
+    select_board
+    add_players
+    @board.print_board
+    until @board.game_over
+      start_turn
+      current_player.do_move @board
+      @board.print_board
+    end
+    @board.print_final_board
+  end
+
+  private
+
   def current_player
     @players[@turn]
+  end
+
+  def start_turn
+    if @turn
+      @turn = 1 - @turn
+    else
+      @turn = 0
+    end
+    puts "#{current_player.marker} turn".cyan
   end
 
   def select_board
@@ -43,27 +67,5 @@ class Game
       end
       @players << new_player
     end
-  end
-
-  def start_turn
-    if @turn
-      @turn = 1 - @turn
-    else
-      @turn = 0
-    end
-    puts "#{current_player.marker} turn".cyan
-  end
-
-  def play
-    puts "*** Welcome to Tic-Tac-Toe game ***"
-    select_board
-    add_players
-    @board.print_board
-    until @board.game_over?
-      start_turn
-      current_player.do_move @board
-      @board.print_board
-    end
-    @board.print_final_board
   end
 end

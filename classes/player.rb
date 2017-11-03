@@ -31,7 +31,7 @@ class BotPlayer < Player
   @@STRATEGIES = {
     :easy => EasyBotStrategy,
     :medium => MediumBotStrategy,
-    #:hard => HardBotStrategy,
+    :hard => HardBotStrategy,
   }
 
   def self.available_levels
